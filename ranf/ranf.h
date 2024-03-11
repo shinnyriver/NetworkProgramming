@@ -36,23 +36,8 @@ int random(int a, int b){
     return (int)(a+(b-a+1)*ranf());
 }
 
-void geometric(real p){
-    int flag = 10;
-    for(int i=0; i<flag; i++){
-        int cnt = 0;
-        while(1){
-                if(ranf()<=p){
-                cnt++;
-                break;
-            }
-         else{
-            cnt++;
-            continue;
-            }
-        }
-        printf("성공 까지의 도전 횟수 : %d\n", cnt);
-    }
-    
+int geometric(real p){
+    return (int)(log(1-ranf())/log(1-p))+1;
 }
 
 // int stream(int n){

@@ -38,20 +38,21 @@ int main(void){
     // printf("Lotto numbers\n");
     // print_arr(lotto, 6);
 
-    printf("1~45\n\n");
-    for(int i=0; i<45; i++){
-        temp[i] = random(1,45);
-        for(int j=0; j<i; j++){
-            if(temp[i] == temp[j]){
-                i--;
-                break;
-            }
-        }
+    // printf("1~45\n\n");
+    // for(int i=0; i<45; i++){
+    //     temp[i] = random(1,45);
+    //     for(int j=0; j<i; j++){
+    //         if(temp[i] == temp[j]){
+    //             i--;
+    //             break;
+    //         }
+    //     }
+    // }
+
+    // print_arr(temp, 45);
+    for(int i=0; i<10; i++){
+    printf("%d\n",geometric(0.1));
     }
-
-    print_arr(temp, 45);
-    geometric(0.1);
-
     return 0;
 
     // for (int i=0; i<100; i++){
