@@ -2,62 +2,18 @@
 #include "ranf.h"
 
 void print_arr(int* arr, int size);
-
-// int main(void){
-//     int w=0, d=0, l=0;
-//     int epoch = 1000000;
-//     double check = 1.0/3.0;
-//     for(int i=0; i<epoch; i++){
-//         real temp = ranf();
-//         if(temp<check) w++;
-//         else if(temp>2*check) l++;
-//         else d++;
-//     }
-
-//     printf("wins: %d\ndraws: %d\nlosses: %d\n\n", w, d, l);
-//     printf("win rate: %lf\ndraw rate: %lf\nloss rate: %lf\n", (double)w/epoch, (double)d/epoch, (double)l/epoch);
-//     return 0;
-// }
-
-// #include <stdio.h>
-// #include "ranf.h"
+void OneToSize(int size);
+void print_geometric(double p);
+void print_uniform(double a, double b);
+void print_exponent(double lamda);
 
 int main(void){
-    int lotto[6] = {0};
-    int temp[45] = {0};
+    // OneToSize(45);
+    // print_geometric(0.1);
+    // print_uniform(0.9, 1.5);
+    print_exponent(0.1);
 
-    // for (int i=0; i<6; i++){
-    //     lotto[i] = random(1, 45);
-    //     for (int j=0; j<i; j++){
-    //         if(lotto[i] == lotto[j]){
-    //             i--;
-    //             break;
-    //         }
-    //     }
-    // }
-    // printf("Lotto numbers\n");
-    // print_arr(lotto, 6);
-
-    // printf("1~45\n\n");
-    // for(int i=0; i<45; i++){
-    //     temp[i] = random(1,45);
-    //     for(int j=0; j<i; j++){
-    //         if(temp[i] == temp[j]){
-    //             i--;
-    //             break;
-    //         }
-    //     }
-    // }
-
-    // print_arr(temp, 45);
-    for(int i=0; i<10; i++){
-    printf("%d\n",geometric(0.1));
-    }
-    return 0;
-
-    // for (int i=0; i<100; i++){
-    //     printf("%d\n", random(1, 45));
-    // }
+    return 0;    
 }
 
 void print_arr(int* arr, int size){
@@ -66,6 +22,41 @@ void print_arr(int* arr, int size){
         printf("%d ", arr[i]);
     }
     printf("\n\n");
+}
+
+void OneToSize(int size){
+    int temp[45] = {0};
+    for(int i=0; i<size; i++){
+        temp[i] = random(1,size);
+        for(int j=0; j<i; j++){
+            if(temp[i] == temp[j]){
+                i--;
+                break;
+            }
+        }
+    }
+    print_arr(temp, size);
+}
+
+void print_geometric(double p){
+    for(int i=0; i<10; i++){
+        printf("%d\n",geometric(p));
+    }
+    printf("\n");
+}
+
+void print_uniform(double a, double b){
+    for(int i=0; i<10; i++){
+        printf("%lf\n", uniform(a, b));
+    }
+    printf("\n");
+}
+
+void print_exponent(double lamda){
+    for(int i=0; i<10; i++){
+        printf("%lf\n", exponent(lamda));
+    }
+    printf("\n");
 }
 
 //biomial random variable

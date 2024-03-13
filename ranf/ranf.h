@@ -56,7 +56,15 @@ int geometric(real p){
 //     return In[n];
 // }
 
-// real uniform(real a, real b){
-//     if(a>b) return -1;
-//     return a+(b-a)*ranf();
-// }
+real uniform(double a, double b) {
+    return a+ranf()*(b-a);
+}
+
+
+real exponent(double lamda) {
+    return (-1/lamda)*log(1-ranf());
+}
+
+int geometri(double p) {
+    return (int)(log(1-ranf())/log(1-p))+1;
+}
