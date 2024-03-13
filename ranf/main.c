@@ -7,13 +7,39 @@ void print_geometric(double p);
 void print_uniform(double a, double b);
 void print_exponent(double lamda);
 
+#define SIZE 1000000
+
 int main(void){
     // OneToSize(45);
     // print_geometric(0.1);
     // print_uniform(0.9, 1.5);
-    print_exponent(0.1);
+    // print_exponent(0.1);
 
-    return 0;    
+    double mean1 = 0;
+    double mean2 = 0;
+    double mean3 = 0;
+
+    for(int i=0; i<SIZE; i++){
+        mean1 += geometric(0.1);
+    }
+
+    for(int i=0; i<SIZE; i++){
+        mean2 += uniform(0.9, 1.5);
+    }
+
+    for(int i=0; i<SIZE; i++){
+        mean3 += exponent(0.1);
+    }
+
+    mean1 /= SIZE;
+    mean2 /= SIZE;
+    mean3 /= SIZE;
+
+    printf("mean of geometric: %lf\n", mean1);
+    printf("mean of uniform: %lf\n", mean2);
+    printf("mean of exponent: %lf\n", mean3);
+
+    return 0;
 }
 
 void print_arr(int* arr, int size){
