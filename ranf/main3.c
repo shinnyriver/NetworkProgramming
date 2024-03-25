@@ -81,7 +81,10 @@ int main(void) {
          }
       }
       
-      
+   }
+   if(n>0) {
+      B+=time - tb;
+      t2 = te;
    }
 
    X = C / time;
