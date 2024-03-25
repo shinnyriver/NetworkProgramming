@@ -62,6 +62,6 @@ int main(void){
 
         }
     }
-    printf("Mean : %lf", (double)(total)/(double)(te));
+    printf("Mean : %lf\n", (double)(total)/(double)(te));
     return 0;
 }
