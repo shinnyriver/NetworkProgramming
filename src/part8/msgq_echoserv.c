@@ -8,9 +8,10 @@
 #include <errno.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
+#include <fcntl.h>
 
 #define MAX_BUFSZ 512
-#define RES_SEND_PROC "res_send"
+#define RES_SEND_PROC "./res_send"
 
 typedef struct msg {
     long msg_type;
@@ -70,4 +71,13 @@ int main(int argc, char *argv[]) {
             errquit("msgsnd fail");
     }
     return 0;
+}
+
+void fork_and_exec(char* key, char *port) {
+	pid_t pid = fork();
+	if(pid<0) errquit("fork fail");
+	else if(pid > 0)
+		return;
+	execlp(RES_SEND_PROC, RES_SEND_PROC, key, port, NULL);
+	perror("execlp fail");
 }

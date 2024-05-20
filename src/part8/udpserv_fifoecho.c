@@ -105,6 +105,6 @@ void parent_start(int sock) {
         if (write(fifowd, &pmsg, sizeof(pmsg)) < 0) {
             perror("write fail");
         }
-        printf("Parent write to fifo\n", nbytes);
+        printf("Parent %d  write to fifo\n", nbytes);
     }
 }

@@ -8,6 +8,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <signal.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
 
 #define MAX_BUFSZ 512
 

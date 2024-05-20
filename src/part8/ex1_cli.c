@@ -61,7 +61,6 @@ int main(int argc, char *argv[]) {
     }
 
     close(client_fd);
-    unlink(client_fifo); // 클라이언트 FIFO 제거
 
     return 0;
 }

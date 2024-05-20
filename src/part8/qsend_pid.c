@@ -4,57 +4,63 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
 #define BUFSZ 512
 
-typedef struct msg {
-    long msg_type;
-    char msg_text[BUFSZ];
+typedef struct _msg {
+	long msg_type;
+	char msg_text[BUFSZ];
 } msg_t;
 
 int main(int argc, char **argv) {
-    pid_t pid;
-    int len, qid;
-    msg_t pmsg;
-    key_t key;
+	pid_t pid;
+	int len, qid;
+	msg_t pmsg;
+	key_t key;
 
-    if(argc != 2) {
-        printf("Usage %s msqkey\n", argv[0]);
-        exit(EXIT_FAILURE);
-    }
+	if(argc!=2) {
+		printf("Usage : %s msqkey", argv[0]);
+		exit(EXIT_FAILURE);
+	}
 
-    key = atoi(argv[1]);
-    if ((qid = msgget(key, IPC_CREAT | 0600)) < 0) {
-        perror("msgget");
-        exit(EXIT_FAILURE);
-    }
+	key = atoi(argv[1]);
 
-    if ((pid = fork()) < 0) {
-        printf("fork fail");
-        exit(EXIT_FAILURE);
-    }
+	if((qid=msgget(key,IPC_CREAT|0600))<0) {
+		perror("msgget");
+		exit(EXIT_FAILURE);
+	}
 
-    if (pid == 0) {  // Child process
-        puts("Child process waiting to read from message queue...");
-        if (msgrcv(qid, &pmsg, BUFSZ, getpid(), 0) < 0) {
-            perror("msgrcv fail");
-        }
-        printf("Received message: %s\n", pmsg.msg_text);
-        printf("Child process PID = %d\n", getpid());
-        exit(EXIT_SUCCESS);
-    } else {  // Parent process
-        puts("Enter message to post:");
-        if (fgets(pmsg.msg_text, BUFSZ, stdin) == NULL) {
-            puts("No message to post");
-            exit(EXIT_FAILURE);
-        }
-        pmsg.msg_type = getpid();  // Using parent's PID as the message type
-        len = strlen(pmsg.msg_text);
-        if (msgsnd(qid, &pmsg, len, 0) < 0) {
-            perror("msgsnd fail");
-            exit(EXIT_FAILURE);
-        }
-        puts("Message posted");
-    }
+	if((pid=fork()) < 0) {
+		printf("fork fail");
+		exit(EXIT_FAILURE);
+	}
+	else if(pid>0) {
+		int nbytes;
+		msg_t rmsg;
+		printf("\n%d process message queue ready...\n", getpid());
+		nbytes = msgrcv(qid, &rmsg, BUFSZ, getpid(), 0);
+		printf("recv = %d bytes\n", nbytes);
+		printf("type = %ld \n", rmsg.msg_type);
+		printf("Receive PID = %d\n", getpid());
+		printf("value = %s\n", rmsg.msg_text);
+		msgctl(qid, IPC_RMID, 0);
+		exit(EXIT_SUCCESS);
+	}
 
-    return 0;
+	puts("Enter message to post : ");
+	if(fgets((&pmsg)->msg_text, BUFSZ, stdin) ==NULL) {
+		puts("no message to post");
+		exit(EXIT_FAILURE);
+	}
+	
+	pmsg.msg_type=getppid();
+	len=strlen(pmsg.msg_text);
+
+	if((msgsnd(qid, &pmsg, len, 0))<0) {
+		perror("msgsnd fail");
+		exit(EXIT_FAILURE);
+	}
+	puts("message posted");
+
+	return ;
 }
