@@ -9,6 +9,11 @@
 #define SERV_FIFO "fifo.serv"
 #define BUFFER_SIZE 1024
 
+typedef struct {
+    pid_t pid;
+    char filepath[BUFFER_SIZE];
+} request_t;
+
 int main(int argc, char *argv[]) {
     if (argc != 2) {
         fprintf(stderr, "Usage: %s <file_path>\n", argv[0]);
