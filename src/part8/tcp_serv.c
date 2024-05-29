@@ -3,12 +3,13 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-#include <sys/socket.h>
-#include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
+#include <sys/socket.h>
+#include <sys/types.h>
 #include <time.h>
-#include <netinet/in.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 
 #define PORT 8080
 #define MAX_CLIENTS 10
@@ -33,6 +34,30 @@ void log_client_connection(int msgid, struct sockaddr_in client_addr) {
              inet_ntoa(client_addr.sin_addr), timestamp);
 
     msgsnd(msgid, &log_msg, sizeof(log_msg.msg_text), 0);
+}
+
+void log_to_file(const char *logfile, const char *message) {
+    FILE *file = fopen(logfile, "a");
+    if (file == NULL) {
+        perror("fopen");
+        exit(1);
+    }
+    fprintf(file, "%s\n", message);
+    fclose(file);
+}
+
+void log_manager() {
+    key_t key = ftok("logfile", 65);
+    int msgid = msgget(key, 0666 | IPC_CREAT);
+    log_msg_t log_msg;
+    const char *logfile = "server.log";
+
+    while (1) {
+        msgrcv(msgid, &log_msg, sizeof(log_msg.msg_text), LOG_MSG_TYPE, 0);
+        log_to_file(logfile, log_msg.msg_text);
+    }
+
+    msgctl(msgid, IPC_RMID, NULL);
 }
 
 int main() {
@@ -76,9 +101,8 @@ int main() {
     pid_t pid = fork();
     if (pid == 0) {
         // 자식 프로세스는 로그 관리 프로세스 실행
-        execlp("./log_manager", "./log_manager", NULL);
-        perror("execlp");
-        exit(EXIT_FAILURE);
+        log_manager();
+        exit(0);
     }
 
     // 메인 서버 루프
