@@ -32,7 +32,7 @@ void *thrfunc(void *arg){
 void prn_data(long me) {
     who_run = me;
     if(who_run != pthread_self()) {
-        printf("Error : %dThread is running who_run=%ld\n", me, who_run);
+        printf("Error : %ldThread is running who_run=%d\n", me, who_run);
     }
     who_run = -1;
 }
