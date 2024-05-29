@@ -5,7 +5,7 @@
 #include <pthread.h>
 #include <limits.h>
 #include <errno.h>
-
+//test
 void *thrfunc(void *arg);
 void cancel_and_join(pthread_t tid);
 
