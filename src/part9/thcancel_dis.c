@@ -7,19 +7,19 @@
 #include <errno.h>
 
 void *thrfunc(void *arg);
+void cancel_and_join(pthread_t tid);
 
-void cancel_and_join(int tid);
-int max_loop=20000000;
+int max_loop = 20000000;
 int cnt = 0;
 pthread_t curthd;
 
-int main(int argc, char **argv){
+int main(int argc, char **argv) {
     pthread_t tid;
-    int status, i;
-    struct timespec micro_sec = {0,100000};
+    int status;
+    struct timespec micro_sec = {0, 100000};
 
     printf("** PTHREAD_CANCEL_DISABLE\n");
-    if((status=pthread_create(&tid, NULL, &thrfunc, NULL))!=0) {
+    if ((status = pthread_create(&tid, NULL, &thrfunc, NULL)) != 0) {
         printf("thread create error: %s\n", strerror(status));
         exit(0);
     }
@@ -32,35 +32,36 @@ int main(int argc, char **argv){
 void *thrfunc(void *arg) {
     int status;
     curthd = pthread_self();
-    if((status=pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL))!=0) {
+    if ((status = pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL)) != 0) {
         printf("pthread_setcancelstate error: %s\n", strerror(status));
         exit(0);
     }
 
-    for(cnt = 1; cnt<max_loop; cnt++) {
-        if(cnt%500000 == 0)
+    for (cnt = 1; cnt < max_loop; cnt++) {
+        if (cnt % 500000 == 0)
             pthread_testcancel();
     }
+
+    return NULL;
 }
 
-void cancel_and_join(int tid) {
-    void * result;
+void cancel_and_join(pthread_t tid) {
+    void *result;
     int status;
-    if((status=pthread_cancel(tid))!=0) {
+    if ((status = pthread_cancel(tid)) != 0) {
         printf("pthread_cancel error: %s\n", strerror(status));
         exit(0);
     }
 
-    if((status=pthread_join(tid, &result))!=0) {
+    if ((status = pthread_join(tid, &result)) != 0) {
         printf("pthread_join error: %s\n", strerror(status));
         exit(0);
     }
 
-    if(result == PTHREAD_CANCELED)
-        printf("[Thread ID=%d] thread is canceled\n", curthd);
+    if (result == PTHREAD_CANCELED)
+        printf("[Thread ID=%lu] thread is canceled\n", tid);
     else
-        printf("[Thread ID=%d] thread is not canceled\n", curthd);
+        printf("[Thread ID=%lu] thread is not canceled\n", tid);
 
-    printf("%d loop / %d loop", max_loop, cnt);
-    return ;
+    printf("%d loop / %d loop\n", max_loop, cnt);
 }
