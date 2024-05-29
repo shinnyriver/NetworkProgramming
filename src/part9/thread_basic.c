@@ -33,6 +33,6 @@ int main(int argc, char **argv){
 
 void *thrfunc(void *arg){
     printf("(%s's thread routine) Process Id = %d\n", who, getpid());
-    printf("(%s's thread routine) Thread Id = %d\n", who, pthread_self());
+    printf("(%s's thread routine) Thread Id = %ld\n", who, pthread_self());
     return NULL;
 }

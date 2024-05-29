@@ -57,9 +57,9 @@ void cancel_and_join(int tid) {
     }
 
     if(result == PTHREAD_CANCELED)
-        printf("[Thread ID=%d] thread is canceled\n", curthd);
+        printf("[Thread ID=%ld] thread is canceled\n", curthd);
     else
-        printf("[Thread ID=%d] thread is not canceled\n", curthd);
+        printf("[Thread ID=%ld] thread is not canceled\n", curthd);
 
     printf("%d loop / %d loop", max_loop, cnt);
     return ;
