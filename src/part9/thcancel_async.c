@@ -34,10 +34,12 @@ void *thrfunc(void *arg) {
     pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 
-    for(int cnt=1; cnt<max_loop; cnt++) {
+    for(cnt=1; cnt<max_loop; cnt++) {
         if (cnt % 50000 == 0)
             pthread_testcancel();
     }
+
+    return NULL;
 }
 
 void cancel_and_join(pthread_t tid) {
