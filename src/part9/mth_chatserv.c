@@ -14,6 +14,7 @@ pthread_mutex_t clients_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 void *handle_client(void *arg);
 void send_message_to_all(char *message, int sender_sock);
+void send_confirmation(int client_sock, char *message);
 
 int main(int argc, char **argv) {
     int server_sock, client_sock, port, addr_len;
@@ -85,6 +86,7 @@ void *handle_client(void *arg) {
     while ((nbytes = recv(client_sock, buffer, BUFFER_SIZE, 0)) > 0) {
         buffer[nbytes] = '\0';
         send_message_to_all(buffer, client_sock);
+        send_confirmation(client_sock, buffer);
     }
 
     // Remove client from the client list
@@ -111,4 +113,12 @@ void send_message_to_all(char *message, int sender_sock) {
         }
     }
     pthread_mutex_unlock(&clients_mutex);
+}
+
+void send_confirmation(int client_sock, char *message) {
+    char confirmation[BUFFER_SIZE];
+    snprintf(confirmation, BUFFER_SIZE, "Message received: %s", message);
+    if (send(client_sock, confirmation, strlen(confirmation), 0) == -1) {
+        perror("send confirmation");
+    }
 }
